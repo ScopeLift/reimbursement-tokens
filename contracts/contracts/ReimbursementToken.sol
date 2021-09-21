@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.7;
 
+import "./IReimbursementToken.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 
 /**
@@ -11,12 +12,12 @@ import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
  * should logically reflect the market's confidence in a protocol's ability to provide the collateral and/or
  * treasury tokens by the maturity date, along with some time preference discount.
  */
-contract ReimbursementToken is ERC20Permit {
+contract ReimbursementToken is IReimbursementToken, ERC20Permit {
   /// @dev Unix time at which redemption of tokens for underlying is possible
-  uint256 public immutable maturity;
+  uint256 public override immutable maturity;
 
   /// @dev Treasury asset that is returned on redemption
-  address public immutable underlying;
+  address public override immutable underlying;
 
   /**
    * @param _name Name for the ERC20 token
