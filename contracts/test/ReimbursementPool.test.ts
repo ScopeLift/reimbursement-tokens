@@ -17,9 +17,11 @@ const { AddressZero } = ethers.constants;
 const tokenName = "Reimbursement Token";
 const tokenSymbol = "RIT";
 const maturityDate = 2000000000; // Unix timestamp far in the future
-const riTokenSupply = parseUnits("1000000", 18);
-const treasuryTokenSupply = parseUnits("1000000", 18);
-const collateralTokenSupply = parseUnits("1000000", 18);
+const riTokenSupply = parseUnits("1000000", 18); // 1 million
+const treasuryTokenDecimals = 6;
+const treasuryTokenSupply = parseUnits("1000000000", treasuryTokenDecimals); // 1 billion
+const collateralTokenDecimals = 8;
+const collateralTokenSupply = parseUnits("21000000", collateralTokenDecimals); // 21 million
 const mintReceiver = ethers.Wallet.createRandom().address;
 const maturityExchangeRate = parseUnits("1", 18);
 
@@ -48,19 +50,19 @@ describe("ReimbursementToken", () => {
   });
 
   async function setup() {
-    const treasuryToken = (await deployMockToken(deployer)) as MockToken;
+    const treasuryToken = await deployMockToken(deployer, "Stable Coin", "STAB", treasuryTokenDecimals);
     await treasuryToken.mint(deployer.address, treasuryTokenSupply);
 
-    const riToken = (await deployRiToken(deployer, [
+    const riToken = await deployRiToken(deployer, [
       tokenName,
       tokenSymbol,
       maturityDate,
       treasuryToken.address,
       riTokenSupply,
       mintReceiver,
-    ])) as ReimbursementToken;
+    ]);
 
-    const collateralToken = (await deployMockToken(deployer)) as MockToken;
+    const collateralToken = await deployMockToken(deployer, "Governance Token", "GOV", collateralTokenDecimals);
     await collateralToken.mint(deployer.address, collateralTokenSupply);
 
     const riPool = await deployPool(deployer, [riToken.address, collateralToken.address, maturityExchangeRate]);
@@ -115,7 +117,7 @@ describe("ReimbursementToken", () => {
     });
 
     it("should revert if the maturity date is in the past", async () => {
-      const lastBlock = await ethers.provider.getBlock('latest');
+      const lastBlock = await ethers.provider.getBlock("latest");
       const recentPast = lastBlock.timestamp - 1000;
       const mockRiToken = await deployMockRiToken(deployer, recentPast, treasuryToken.address);
 

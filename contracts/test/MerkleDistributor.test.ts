@@ -4,7 +4,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-wit
 import { expect } from "chai";
 
 // Internal imports
-import { ReimbursementToken, MockToken, MerkleDistributor } from "../typechain";
+import { ReimbursementToken, MerkleDistributor } from "../typechain";
 import { deployMockToken, deployRiToken } from "./utils";
 import { BalanceTree } from "./merkle-distributor/balance-tree";
 
@@ -21,9 +21,9 @@ const tokenSupply = parseUnits("1000000", 18);
 // Constants
 const ZERO_BYTES32 = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
-export const deployDistributor = (deployer: SignerWithAddress, params: Array<any>) => {
+export const deployDistributor = (deployer: SignerWithAddress, params: Array<any>): Promise<MerkleDistributor> => {
   const artifact = artifacts.readArtifactSync("MerkleDistributor");
-  return deployContract(deployer, artifact, params);
+  return deployContract(deployer, artifact, params) as Promise<MerkleDistributor>;
 };
 
 describe("MerkleDistributor", () => {
@@ -38,17 +38,17 @@ describe("MerkleDistributor", () => {
   });
 
   async function setup() {
-    const mockToken = (await deployMockToken(deployer)) as MockToken;
+    const mockToken = await deployMockToken(deployer);
     await mockToken.mint(deployer.address, tokenSupply);
 
-    const token = (await deployRiToken(deployer, [
+    const token = await deployRiToken(deployer, [
       tokenName,
       tokenSymbol,
       maturityDate,
       mockToken.address,
       tokenSupply,
       deployer.address,
-    ])) as ReimbursementToken;
+    ]);
 
     return { mockToken, token };
   }
@@ -58,7 +58,7 @@ describe("MerkleDistributor", () => {
   });
 
   it("should properly deploy the distributor with the ritoken", async () => {
-    distributor = (await deployDistributor(deployer, [token.address, ZERO_BYTES32])) as MerkleDistributor;
+    distributor = await deployDistributor(deployer, [token.address, ZERO_BYTES32]);
 
     const distributorToken = await distributor.token();
     const merkleRoot = await distributor.merkleRoot();
@@ -78,7 +78,7 @@ describe("MerkleDistributor", () => {
     ]);
 
     // Deploy distributor with appropriate Merkle root
-    distributor = (await deployDistributor(deployer, [token.address, tree.getHexRoot()])) as MerkleDistributor;
+    distributor = await deployDistributor(deployer, [token.address, tree.getHexRoot()]);
 
     // Transfer ritoken supply to distributor (a deploy script would do the same)
     await token.transfer(distributor.address, tokenSupply);

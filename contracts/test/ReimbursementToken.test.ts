@@ -29,17 +29,17 @@ describe("ReimbursementToken", () => {
   });
 
   async function setup() {
-    const mockToken = (await deployMockToken(deployer)) as MockToken;
+    const mockToken = await deployMockToken(deployer);
     await mockToken.mint(deployer.address, tokenSupply);
 
-    const token = (await deployRiToken(deployer, [
+    const token = await deployRiToken(deployer, [
       tokenName,
       tokenSymbol,
       maturityDate,
       mockToken.address,
       tokenSupply,
       mintReceiver,
-    ])) as ReimbursementToken;
+    ]);
 
     return { mockToken, token };
   }
