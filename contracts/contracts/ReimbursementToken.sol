@@ -13,11 +13,11 @@ import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
  * treasury tokens by the maturity date, along with some time preference discount.
  */
 contract ReimbursementToken is IReimbursementToken, ERC20Permit {
-  /// @dev Unix time at which redemption of tokens for underlying is possible
-  uint256 public override immutable maturity;
+  /// @notice Unix time at which redemption of tokens for underlying is possible
+  uint256 public immutable override maturity;
 
-  /// @dev Treasury asset that is returned on redemption
-  address public override immutable underlying;
+  /// @notice Treasury asset that is returned on redemption
+  address public immutable override underlying;
 
   /**
    * @param _name Name for the ERC20 token
