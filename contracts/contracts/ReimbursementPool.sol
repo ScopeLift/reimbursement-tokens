@@ -16,6 +16,25 @@ contract ReimbursementPool {
     IERC20 _collateralToken,
     uint256 _maturityExchangeRate
   ) {
+    require(
+      IERC20(_riToken.underlying()).totalSupply() > 0,
+      "ReimbursementPool: Treasury Token must have non-zero supply"
+    );
+
+    if (address(_collateralToken) != address(0)) {
+      require(
+        IERC20(_collateralToken).totalSupply() > 0,
+        "ReimbursementPool: Collateral Token must have non-zero supply"
+      );
+    }
+
+    require(
+      _riToken.maturity() > block.timestamp,
+      "ReimbursementPool: Token maturity must be in the future"
+    );
+
+    require(_maturityExchangeRate > 0, "ReimbursementPool: Maturity exchange rate must be non-zero");
+
     riToken = _riToken;
     treasuryToken = IERC20(_riToken.underlying());
     collateralToken = IERC20(_collateralToken);
