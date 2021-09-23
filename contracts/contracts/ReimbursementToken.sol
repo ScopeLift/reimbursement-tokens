@@ -5,7 +5,7 @@ import "./IReimbursementToken.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 
 /**
- * @dev A ReimbursementToken is an asset provided by protocols to users in response to a loss of funds.
+ * @notice A ReimbursementToken is an asset provided by protocols to users in response to a loss of funds.
  * It represents a claim on collateral and treasury tokens that have or will be provided by a protocol.
  * The reimbursement token may be exchanged for collateral and or treasury tokens on a specified maturity date.
  * Before the maturity date, the tokens may be bought and sold freely. The market price of a ReimbursementToken
