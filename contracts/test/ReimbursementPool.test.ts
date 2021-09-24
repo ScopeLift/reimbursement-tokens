@@ -23,7 +23,7 @@ const treasuryTokenSupply = parseUnits("1000000000", treasuryTokenDecimals); // 
 const collateralTokenDecimals = 8;
 const collateralTokenSupply = parseUnits("21000000", collateralTokenDecimals); // 21 million
 const mintReceiver = ethers.Wallet.createRandom().address;
-const maturityExchangeRate = parseUnits("1", 18);
+const targetExchangeRate = parseUnits("1", 18);
 
 const deployPool = (deployer: SignerWithAddress, params: Array<any>) => {
   const artifact = artifacts.readArtifactSync("ReimbursementPool");
@@ -65,7 +65,7 @@ describe("ReimbursementToken", () => {
     const collateralToken = await deployMockToken(deployer, "Governance Token", "GOV", collateralTokenDecimals);
     await collateralToken.mint(deployer.address, collateralTokenSupply);
 
-    const riPool = await deployPool(deployer, [riToken.address, collateralToken.address, maturityExchangeRate]);
+    const riPool = await deployPool(deployer, [riToken.address, collateralToken.address, targetExchangeRate]);
 
     return { treasuryToken, riToken, collateralToken, riPool };
   }
@@ -79,31 +79,30 @@ describe("ReimbursementToken", () => {
       expect(await riPool.riToken()).to.equal(riToken.address);
       expect(await riPool.treasuryToken()).to.equal(treasuryToken.address);
       expect(await riPool.collateralToken()).to.equal(collateralToken.address);
-      expect(await riPool.maturityDate()).to.equal(maturityDate);
-      expect(await riPool.maturityExchangeRate()).to.equal(maturityExchangeRate);
+      expect(await riPool.maturity()).to.equal(maturityDate);
+      expect(await riPool.targetExchangeRate()).to.equal(targetExchangeRate);
     });
 
     it("should allow the pool contract to be deployed with no collateral token", async () => {
-      const riPool = await deployPool(deployer, [riToken.address, AddressZero, maturityExchangeRate]);
+      const riPool = await deployPool(deployer, [riToken.address, AddressZero, targetExchangeRate]);
       expect(await riPool.collateralToken()).to.equal(AddressZero);
     });
 
     it("should revert if the collateral token is set to a non-contract address", async () => {
       const fakeCollateralTokenAddr = ethers.Wallet.createRandom().address;
-      await expect(deployPool(deployer, [riToken.address, fakeCollateralTokenAddr, maturityExchangeRate])).to.be
-        .reverted;
+      await expect(deployPool(deployer, [riToken.address, fakeCollateralTokenAddr, targetExchangeRate])).to.be.reverted;
     });
 
     it("should revert if the collateral token has 0 supply", async () => {
       const badCollateralToken = await deployMockToken(deployer);
       await expect(
-        deployPool(deployer, [riToken.address, badCollateralToken.address, maturityExchangeRate]),
+        deployPool(deployer, [riToken.address, badCollateralToken.address, targetExchangeRate]),
       ).to.be.revertedWith("ReimbursementPool: Collateral Token must have non-zero supply");
     });
 
     it("should revert if the maturity exchange rate is 0", async () => {
       await expect(deployPool(deployer, [riToken.address, collateralToken.address, 0])).to.be.revertedWith(
-        "ReimbursementPool: Maturity exchange rate must be non-zero",
+        "ReimbursementPool: Target exchange rate must be non-zero",
       );
     });
 
@@ -112,7 +111,7 @@ describe("ReimbursementToken", () => {
       const mockRiToken = await deployMockRiToken(deployer, maturityDate, badTreasuryToken.address);
 
       await expect(
-        deployPool(deployer, [mockRiToken.address, collateralToken.address, maturityExchangeRate]),
+        deployPool(deployer, [mockRiToken.address, collateralToken.address, targetExchangeRate]),
       ).to.be.revertedWith("ReimbursementPool: Treasury Token must have non-zero supply");
     });
 
@@ -122,7 +121,7 @@ describe("ReimbursementToken", () => {
       const mockRiToken = await deployMockRiToken(deployer, recentPast, treasuryToken.address);
 
       await expect(
-        deployPool(deployer, [mockRiToken.address, collateralToken.address, maturityExchangeRate]),
+        deployPool(deployer, [mockRiToken.address, collateralToken.address, targetExchangeRate]),
       ).to.be.revertedWith("ReimbursementPool: Token maturity must be in the future");
     });
   });
