@@ -45,12 +45,10 @@ contract ReimbursementPool {
       "ReimbursementPool: Treasury Token must have non-zero supply"
     );
 
-    if (address(_collateralToken) != address(0)) {
-      require(
-        IERC20(_collateralToken).totalSupply() > 0,
-        "ReimbursementPool: Collateral Token must have non-zero supply"
-      );
-    }
+    require(
+      (address(_collateralToken) == address(0)) || (IERC20(_collateralToken).totalSupply() > 0),
+      "ReimbursementPool: Collateral Token must have non-zero supply"
+    );
 
     require(_riToken.maturity() > block.timestamp, "ReimbursementPool: Token maturity must be in the future");
 
