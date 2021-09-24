@@ -3,7 +3,7 @@ pragma solidity >=0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import "./IMerkleDistributor.sol";
+import "./interfaces/IMerkleDistributor.sol";
 
 /// @notice Distributes a token via Merkle proof claims against a Merkle root set on deploy
 contract MerkleDistributor is IMerkleDistributor {
