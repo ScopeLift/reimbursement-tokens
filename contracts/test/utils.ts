@@ -1,12 +1,17 @@
 import { artifacts, waffle } from "hardhat";
 import { Signer, BigNumberish, BigNumber } from "ethers";
-import { ReimbursementToken, MockToken } from "../typechain/";
+import { ReimbursementToken, MockToken, UniV3ReimbursementOracle } from "../typechain/";
 import { parseUnits } from "@ethersproject/units";
 const { deployContract } = waffle;
 
 export const deployRiToken = (deployer: Signer, params: Array<any>): Promise<ReimbursementToken> => {
   const artifact = artifacts.readArtifactSync("ReimbursementToken");
   return deployContract(deployer, artifact, params) as Promise<ReimbursementToken>;
+};
+
+export const deployReimbursementOracle = (deployer: Signer, params: Array<any>): Promise<UniV3ReimbursementOracle> => {
+  const artifact = artifacts.readArtifactSync("UniV3ReimbursementOracle");
+  return deployContract(deployer, artifact, params) as Promise<UniV3ReimbursementOracle>;
 };
 
 export const deployMockToken = (
