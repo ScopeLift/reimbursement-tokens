@@ -13,5 +13,5 @@ interface IReimbursementOracle {
    * @param _quoteToken The token in which the "price" is quoted
    * @return The amount of _quoteToken received for 1 _baseToken, expressed as a WAD
    */
-  function getOracleQuote(address _baseToken, address _quoteToken) external returns (uint256);
+  function getOracleQuote(address _baseToken, address _quoteToken) external view returns (uint256);
 }
