@@ -1,5 +1,5 @@
 {
-  "name": "reimbursement-token-contracts",
+  "name": "@reimbursement-token/contracts",
   "description": "Smart contracts for Yield, Inc's Reimbursement Token project.",
   "version": "0.0.1",
   "author": {
