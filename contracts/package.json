@@ -1,9 +1,41 @@
 {
   "name": "@reimbursement-token/contracts",
-  "description": "Smart contracts for Yield, Inc's Reimbursement Token project.",
   "version": "0.0.1",
+  "private": true,
+  "description": "Smart contracts for Yield, Inc's Reimbursement Token project.",
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "hardhat",
+    "smart-contracts",
+    "solidity"
+  ],
   "author": {
     "name": "Yield, Inc."
+  },
+  "files": [
+    "/contracts"
+  ],
+  "scripts": {
+    "build": "hardhat compile",
+    "clean": "hardhat clean",
+    "coverage": "cross-env CODE_COVERAGE=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
+    "deploy": "hardhat deploy:Greeter",
+    "postinstall": "cd .. && husky install",
+    "lint": "yarn run lint:sol && yarn run lint:ts && yarn run prettier:check",
+    "lint:sol": "solhint --config ./.solhint.json --max-warnings 0 \"contracts/**/*.sol\"",
+    "lint:ts": "eslint --config ./.eslintrc.yaml --ignore-path ./.eslintignore --ext .js,.ts .",
+    "precommit": "lint-staged",
+    "prettier": "prettier --config ./.prettierrc.yaml --write \"**/*.{js,json,md,sol,ts}\"",
+    "prettier:check": "prettier --check --config ./.prettierrc.yaml \"**/*.{js,json,md,sol,ts}\"",
+    "test": "yarn typechain && hardhat test",
+    "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain"
+  },
+  "resolutions": {
+    "@solidity-parser/parser": "^0.13.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.1"
   },
   "devDependencies": {
     "@codechecks/client": "^0.1.11",
@@ -48,38 +80,6 @@
     "ts-node": "^10.2.1",
     "typechain": "^5.1.2",
     "typescript": "^4.5.2"
-  },
-  "files": [
-    "/contracts"
-  ],
-  "keywords": [
-    "blockchain",
-    "ethereum",
-    "hardhat",
-    "smart-contracts",
-    "solidity"
-  ],
-  "private": true,
-  "resolutions": {
-    "@solidity-parser/parser": "^0.13.2"
-  },
-  "scripts": {
-    "clean": "hardhat clean",
-    "build": "hardhat compile",
-    "coverage": "cross-env CODE_COVERAGE=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
-    "deploy": "hardhat deploy:Greeter",
-    "lint": "yarn run lint:sol && yarn run lint:ts && yarn run prettier:check",
-    "lint:sol": "solhint --config ./.solhint.json --max-warnings 0 \"contracts/**/*.sol\"",
-    "lint:ts": "eslint --config ./.eslintrc.yaml --ignore-path ./.eslintignore --ext .js,.ts .",
-    "postinstall": "cd .. && husky install",
-    "precommit": "lint-staged",
-    "prettier": "prettier --config ./.prettierrc.yaml --write \"**/*.{js,json,md,sol,ts}\"",
-    "prettier:check": "prettier --check --config ./.prettierrc.yaml \"**/*.{js,json,md,sol,ts}\"",
-    "test": "yarn typechain && hardhat test",
-    "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain"
-  },
-  "dependencies": {
-    "@openzeppelin/contracts": "^4.3.1"
   },
   "volta": {
     "extends": "../package.json"

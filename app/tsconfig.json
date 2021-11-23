@@ -2,7 +2,11 @@
   "extends": "../tsconfig.settings.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "skipLibCheck": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
@@ -16,14 +20,33 @@
     "jsx": "preserve",
     "strict": false,
     "paths": {
-      "components/*": ["./src/components/*"],
-      "data/*": ["./src/data/*"],
-      "helpers/*": ["./src/helpers/*"],
-      "hooks/*": ["./src/hooks/*"],
-      "config": ["./config"],
-      "types": ["./types"]
-    }
+      "components/*": [
+        "./src/components/*"
+      ],
+      "data/*": [
+        "./src/data/*"
+      ],
+      "helpers/*": [
+        "./src/helpers/*"
+      ],
+      "hooks/*": [
+        "./src/hooks/*"
+      ],
+      "config": [
+        "./config"
+      ],
+      "types": [
+        "./types"
+      ]
+    },
+    "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -1,19 +1,21 @@
 {
   "name": "yield-reimbursement-tokens",
   "version": "0.0.1",
+  "private": true,
   "description": "Yield Reimbursement Tokens",
   "author": "ScopeLift <support@scopelift.co>",
-  "private": true,
   "workspaces": [
     "contracts",
     "app"
   ],
   "scripts": {
+    "app": "yarn workspace @reimbursement-token/app",
     "build": "lerna run build",
     "clean": "lerna run clean",
+    "contracts": "yarn workspace @reimbursement-token/contracts",
     "lint": "lerna run lint",
-    "prettier": "lerna run prettier",
     "prepare": "husky install && lerna run prepare",
+    "prettier": "lerna run prettier",
     "test": "lerna run test"
   },
   "devDependencies": {
