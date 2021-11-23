@@ -1,0 +1,33 @@
+{
+  "name": "yield-reimbursement-tokens",
+  "version": "0.0.1",
+  "description": "Yield Reimbursement Tokens",
+  "author": "ScopeLift <support@scopelift.co>",
+  "private": true,
+  "workspaces": [
+    "contracts",
+    "app"
+  ],
+  "scripts": {
+    "build": "lerna run build",
+    "clean": "lerna run clean",
+    "lint": "lerna run lint",
+    "prettier": "lerna run prettier",
+    "prepare": "husky install && lerna run prepare",
+    "test": "lerna run test"
+  },
+  "devDependencies": {
+    "eslint": "^8.3.0",
+    "eslint-config-prettier": "^8.3.0",
+    "husky": "^7.0.4",
+    "lerna": "^4.0.0",
+    "lint-staged": "^12.1.2",
+    "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.5.2"
+  },
+  "volta": {
+    "node": "16.13.0",
+    "yarn": "1.22.17"
+  }
+}
