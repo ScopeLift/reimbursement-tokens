@@ -1,12 +1,37 @@
 # Reimbursement Tokens
 
-The repository has two subdirectories:
+The repository has two packages:
 
 1. `/contracts` for the Reimbursement Token smart contracts
 2. `/app` for the Reimbursement Token frontend
 
-Eventually, this will be a monorepo where actions can be take across sub-projects from this top level directory.
+### Prerequisites
 
-For now, only the smart contracts are under development, so please navigate to the `/contracts` directory to run `yarn` commands.
+We recommend install [volta](https://volta.sh) to ensure that the project runs with the correct node/yarn versions.
 
-The `/app` directory is a placeholder and is currently empty, but will eventually house the frontend dApp for interacting with this project.
+### Install
+
+To install:
+
+```sh
+# cwd: ./
+yarn
+cp app/.env.example app/.env
+nano app/.env # provide correct env values
+cp contracts/.env.example contracts/.env
+nano contracts/.env # provide correct env values
+```
+
+### Run tests
+
+```sh
+# cwd: ./
+yarn test
+```
+
+### Run system in dev
+
+```sh
+# cwd: ./
+yarn dev
+```
