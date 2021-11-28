@@ -1,3 +1,4 @@
+import { hexZeroPad } from "@ethersproject/bytes";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Signer } from "ethers";
 
@@ -84,7 +85,10 @@ export class UniswapV3Deployment {
       },
       this.deployer,
     );
-    this.nonfungibleTokenPositionDescriptor = await contract.deploy(this.weth, 'WETH');
+    this.nonfungibleTokenPositionDescriptor = await contract.deploy(
+      this.weth,
+      hexZeroPad("0x" + Buffer.from("WETH").toString("hex"), 32),
+    );
     return this.nonfungibleTokenPositionDescriptor;
   }
 
@@ -125,5 +129,7 @@ export class UniswapV3Deployment {
 
     const nonfungiblePositionManager = await this.deployNonfungiblePositionManager();
     console.log(`NonfungiblePositionManager: ${nonfungiblePositionManager.address}`);
+
+    return { factory, nonfungiblePositionManager };
   }
 }

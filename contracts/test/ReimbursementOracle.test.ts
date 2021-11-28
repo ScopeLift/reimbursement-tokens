@@ -10,6 +10,8 @@ import { UniV3ReimbursementOracle } from "../typechain/";
 import { deployReimbursementOracle, deployMockToken, units } from "./utils";
 import { Contract } from "@ethersproject/contracts";
 import { UniswapV3Deployment } from "./deployUniswap";
+import { addLiquidity } from "./uniswapAddLiquidity";
+import { createPool } from "./uniswapCreatePool";
 
 // Conevenience variables
 const { loadFixture } = waffle;
@@ -21,9 +23,9 @@ const treasuryTokenSupply = parseUnits("1000000000", treasuryTokenDecimals); // 
 const collateralTokenDecimals = 8;
 const collateralTokenSupply = parseUnits("21000000", collateralTokenDecimals); // 21 million
 
-const deployUniV3Factory = (signer: SignerWithAddress) => {
-  return deployContract(signer, UniswapV3Factory, []);
-};
+// const deployUniV3Factory = (signer: SignerWithAddress) => {
+//   return deployContract(signer, UniswapV3Factory, []);
+// };
 
 // const deployUniV3Pool = (signer: SignerWithAddress) => {
 //   return deployContract(signer, IUniswapV3PoolArtifact);
@@ -43,13 +45,41 @@ describe.only("ReimbursementOracle", () => {
     await treasuryToken.mint(deployer.address, treasuryTokenSupply);
     const collateralToken = await deployMockToken(deployer, "Governance Token", "GOV", collateralTokenDecimals);
     await collateralToken.mint(deployer.address, collateralTokenSupply);
-    const UniV3Factory = await deployUniV3Factory(deployer);
-    const poolDeploy = await UniV3Factory.connect(deployer)
-      .createPool(treasuryToken.address, collateralToken.address, 500)
-      .then((tx: any) => tx.wait());
-    const pool = await ethers.getContractAt(IUniswapV3PoolArtifact.abi, poolDeploy.events[0].args.pool, deployer);
+    const WETH = await deployMockToken(deployer, "Wrapped ETH", "WETH", 18);
+    const uni = new UniswapV3Deployment(WETH.address, deployer);
+    const { factory, nonfungiblePositionManager } = await uni.deployAll();
+    // const UniV3Factory = await deployUniV3Factory(deployer);
+    // const poolDeploy = await factory
+    //   .connect(deployer)
+    //   .createPool(treasuryToken.address, collateralToken.address, 3000)
+    //   .then((tx: any) => tx.wait());
+    // const pool = await ethers.getContractAt(IUniswapV3PoolArtifact.abi, poolDeploy.events[0].args.pool, deployer);
+    // const init = await pool.connect(deployer).initialize("1000000000000");
+    const poolAddress = await createPool({
+      fee: 3000,
+      amount0: 100000000,
+      amount1: 100000000,
+      contract: nonfungiblePositionManager.address,
+      deployer,
+      token0: treasuryToken.address,
+      token1: collateralToken.address,
+    });
+    const pool = await ethers.getContractAt(IUniswapV3PoolArtifact.abi, poolAddress, deployer);
     // add liquidity to pool deploy
-    await pool.connect(deployer).mint(deployer.address, 100, 1000000, eth(100), []);
+    const liq = await addLiquidity({
+      contract: nonfungiblePositionManager.address,
+      amount0: 100000000,
+      amount1: 100000000,
+      amount0min: 1,
+      amount1min: 1,
+      fee: 3000,
+      deadline: "1",
+      token0: treasuryToken.address,
+      token1: collateralToken.address,
+      signer: deployer,
+    });
+    console.log(liq);
+    // await pool.connect(deployer).mint(deployer.address, 100, 1000000, eth(100), []);
     const oracle = await deployReimbursementOracle(deployer, []);
     return { pool, oracle };
   }
