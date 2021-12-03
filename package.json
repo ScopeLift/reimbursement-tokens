@@ -13,12 +13,14 @@
     "build": "lerna run build",
     "clean": "lerna run clean",
     "contracts": "yarn workspace @reimbursement-token/contracts",
+    "dev": "concurrently --success first --kill-others-on-fail \"yarn contracts run node\" \"yarn app dev\" \"yarn contracts run deploy\"",
     "lint": "lerna run lint",
     "prepare": "husky install && lerna run prepare",
     "prettier": "lerna run prettier",
     "test": "lerna run test"
   },
   "devDependencies": {
+    "concurrently": "^6.4.0",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
     "husky": "^7.0.4",
