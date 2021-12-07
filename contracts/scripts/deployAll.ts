@@ -1,9 +1,11 @@
+import { Contract } from "@ethersproject/contracts";
 import { ethers } from "hardhat";
 import { MockOracle__factory, MockToken__factory } from "../typechain";
 import { deployReimbursementPool } from "./deployReimbursementPool";
 import { deployReimbursementToken } from "./deployReimbursementToken";
+import { record } from "./helpers";
 
-export const deployAll = async () => {
+async function deployAll() {
   const signers = await ethers.getSigners();
   const usdc = await ethers
     .getContractFactory("MockToken")
@@ -20,9 +22,25 @@ export const deployAll = async () => {
   const oracle = await ethers
     .getContractFactory("MockOracle")
     .then((factory: MockOracle__factory) => factory.deploy(10000));
-  await deployReimbursementPool(riToken.address, usdc.address, oracle.address, 10000000, signers[0].address);
-};
+  const reimbursementPool = await deployReimbursementPool(
+    riToken.address,
+    usdc.address,
+    oracle.address,
+    10000000,
+    signers[0].address,
+  );
+  const addr = (contract: Contract) => contract.address;
+  await record({
+    usdc: addr(usdc),
+    reimbursementPool: addr(reimbursementPool),
+    riToken: addr(riToken),
+    oracle: addr(oracle),
+  });
+}
 
 deployAll()
-  .then(process.exit(0))
-  .catch(e => console.log(e));
+  .then(() => process.exit(0))
+  .catch(e => {
+    console.error(e);
+    process.exit(1);
+  });
