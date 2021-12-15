@@ -20,7 +20,7 @@
     "build": "hardhat compile",
     "clean": "hardhat clean",
     "coverage": "cross-env CODE_COVERAGE=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
-    "deploy": "hardhat run scripts/deployAll.ts",
+    "deploy": "hardhat run scripts/deployDevEnvironment.ts --network localhost",
     "postinstall": "cd .. && husky install",
     "lint": "yarn run lint:sol && yarn run lint:ts && yarn run prettier:check",
     "lint:sol": "solhint --config ./.solhint.json --max-warnings 0 \"contracts/**/*.sol\"",

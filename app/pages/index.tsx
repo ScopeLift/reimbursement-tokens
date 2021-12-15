@@ -1,4 +1,4 @@
-import deployment from '@reimbursement-token/contracts/deploys/hardhat.json';
+import deployment from '@reimbursement-token/contracts/deploys/localhost.json';
 
 const Index = () => {
   return (
