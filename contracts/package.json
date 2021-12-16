@@ -19,6 +19,7 @@
   "scripts": {
     "build": "hardhat compile",
     "clean": "hardhat clean",
+    "check-port": "sh ./scripts/util/check-port.sh",
     "coverage": "cross-env CODE_COVERAGE=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
     "deploy": "hardhat run scripts/deployDevEnvironment.ts --network localhost",
     "postinstall": "cd .. && husky install",

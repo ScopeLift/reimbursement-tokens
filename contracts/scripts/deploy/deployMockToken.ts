@@ -1,5 +1,5 @@
 import { ethers } from "hardhat";
-import { MockToken__factory } from "../typechain/factories/MockToken__factory";
+import { MockToken__factory } from "../../typechain/factories/MockToken__factory";
 type DeployRecord = {
   address: string;
   constructorArgs?: unknown[];

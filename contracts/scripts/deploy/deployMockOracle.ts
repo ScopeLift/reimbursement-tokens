@@ -1,5 +1,5 @@
 import { ethers } from "hardhat";
-import { MockOracle__factory } from "../typechain/factories/MockOracle__factory";
+import { MockOracle__factory } from "../../typechain/factories/MockOracle__factory";
 type DeployRecord = {
   address: string;
   constructorArgs?: unknown[];

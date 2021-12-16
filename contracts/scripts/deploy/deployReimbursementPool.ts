@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
-import { ReimbursementPool } from "../typechain";
-import { ReimbursementPool__factory } from "../typechain/factories/ReimbursementPool__factory";
+import { ReimbursementPool } from "../../typechain";
+import { ReimbursementPool__factory } from "../../typechain/factories/ReimbursementPool__factory";
 import { DeployRecord } from "./helpers";
 
 export const deployReimbursementPool = async (

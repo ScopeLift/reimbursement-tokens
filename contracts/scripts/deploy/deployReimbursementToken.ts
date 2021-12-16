@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
-import { ReimbursementToken } from "../typechain/ReimbursementToken";
-import { ReimbursementToken__factory } from "../typechain/factories/ReimbursementToken__factory";
+import { ReimbursementToken } from "../../typechain";
+import { ReimbursementToken__factory } from "../../typechain/factories/ReimbursementToken__factory";
 import { DeployRecord } from "./helpers";
 
 export const deployReimbursementToken = async (

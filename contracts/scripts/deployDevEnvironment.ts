@@ -1,9 +1,9 @@
 import { ethers } from "hardhat";
-import { deployMockToken } from "./deployMockToken";
-import { deployMockOracle } from "./deployMockOracle";
-import { deployReimbursementPool } from "./deployReimbursementPool";
-import { deployReimbursementToken } from "./deployReimbursementToken";
-import { record, DeployRecord } from "./helpers";
+import { deployMockToken } from "./deploy/deployMockToken";
+import { deployMockOracle } from "./deploy/deployMockOracle";
+import { deployReimbursementPool } from "./deploy/deployReimbursementPool";
+import { deployReimbursementToken } from "./deploy/deployReimbursementToken";
+import { record, DeployRecord } from "./deploy/helpers";
 
 async function main() {
   const deployContext: Record<string, DeployRecord> = {};
