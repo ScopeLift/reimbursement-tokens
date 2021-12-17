@@ -7,6 +7,7 @@ export type DeployRecord = {
 };
 
 export const record = async (deployment: Record<string, DeployRecord>): Promise<void> => {
-  console.log(`saving deploy to ./deploys/${network.name}.json\n${JSON.stringify(deployment, null, 2)}`);
+  console.log(`Saving deployment record to contracts/deploys/${network.name}.json`);
   await writeFile(`./deploys/${network.name}.json`, JSON.stringify(deployment, null, 2));
+  console.log(`Deployment record saved!`);
 };

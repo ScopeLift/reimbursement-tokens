@@ -4,13 +4,7 @@ const Index = () => {
   return (
     <div>
       <p>Contract deployments:</p>
-      <ul>
-        {Object.entries(deployment).map(([key, val]) => (
-          <li key={key}>
-            {key}: {val}
-          </li>
-        ))}
-      </ul>
+      <ul>{JSON.stringify(deployment)}</ul>
     </div>
   );
 };
