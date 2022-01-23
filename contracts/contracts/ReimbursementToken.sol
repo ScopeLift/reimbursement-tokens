@@ -2,7 +2,7 @@
 pragma solidity >=0.8.7;
 
 import "./interfaces/IReimbursementToken.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
+import "@openzeppelin/contracts-v4/token/ERC20/extensions/draft-ERC20Permit.sol";
 
 /**
  * @notice A ReimbursementToken is an asset provided by protocols to users in response to a loss of funds.

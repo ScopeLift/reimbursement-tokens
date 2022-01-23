@@ -2,7 +2,10 @@ import { artifacts, waffle } from "hardhat";
 import { Signer, BigNumberish, BigNumber } from "ethers";
 import { ReimbursementToken, MockToken, UniV3ReimbursementOracle } from "../typechain/";
 import { parseUnits } from "@ethersproject/units";
+import { Provider } from "@ethersproject/providers";
 const { deployContract } = waffle;
+
+export const getNow = async (provider: Provider) => (await provider.getBlock("latest")).timestamp;
 
 export const deployRiToken = (deployer: Signer, params: Array<any>): Promise<ReimbursementToken> => {
   const artifact = artifacts.readArtifactSync("ReimbursementToken");
@@ -31,7 +34,7 @@ export const deployMockToken = (
  * another function that when called will convert the string representation to a BigNumber object.
  * @param precision
  */
-const unit = (precision: number) => {
+export const unit = (precision: number) => {
   const disallowDecimal = (val: number | string) => {
     if (typeof val === "number" && val.toString().includes(".")) throw "please supply a string instead";
     return val;
