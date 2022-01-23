@@ -1,0 +1,22 @@
+diff --git a/node_modules/@uniswap/v3-core/contracts/libraries/FullMath.sol b/node_modules/@uniswap/v3-core/contracts/libraries/FullMath.sol
+index 8688a17..9985059 100644
+--- a/node_modules/@uniswap/v3-core/contracts/libraries/FullMath.sol
++++ b/node_modules/@uniswap/v3-core/contracts/libraries/FullMath.sol
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: MIT
+-pragma solidity >=0.4.0;
++pragma solidity >=0.4.0 <0.8.0;
+ 
+ /// @title Contains 512-bit math functions
+ /// @notice Facilitates multiplication and division that can have overflow of an intermediate value without any loss of precision
+diff --git a/node_modules/@uniswap/v3-core/contracts/libraries/TickMath.sol b/node_modules/@uniswap/v3-core/contracts/libraries/TickMath.sol
+index 378e445..ee48fee 100644
+--- a/node_modules/@uniswap/v3-core/contracts/libraries/TickMath.sol
++++ b/node_modules/@uniswap/v3-core/contracts/libraries/TickMath.sol
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+-pragma solidity >=0.5.0;
++pragma solidity >=0.5.0 <0.8.0;
+ 
+ /// @title Math library for computing sqrt prices from ticks and vice versa
+ /// @notice Computes sqrt price for ticks of size 1.0001, i.e. sqrt(1.0001^tick) as fixed point Q64.96 numbers. Supports

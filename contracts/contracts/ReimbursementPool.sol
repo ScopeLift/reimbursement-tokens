@@ -3,8 +3,8 @@ pragma solidity >=0.8.7;
 
 import "./interfaces/IReimbursementToken.sol";
 import "./interfaces/IReimbursementOracle.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
+import "@openzeppelin/contracts-v4/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts-v4/interfaces/IERC20Metadata.sol";
 
 /**
  * @notice A ReimbursementPool manages the mechanics of paying out the redemption value of its associated

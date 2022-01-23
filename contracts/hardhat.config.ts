@@ -85,21 +85,27 @@ const config: HardhatUserConfig = {
     tests: "./test",
   },
   solidity: {
-    version: "0.8.7",
-    settings: {
-      metadata: {
-        bytecodeHash: "none",
+    compilers: [
+      {
+        version: "0.7.6",
       },
-      optimizer: {
-        enabled: true,
-        runs: 99999,
+      {
+        version: "0.8.7",
+        settings: {
+          metadata: {
+            bytecodeHash: "none",
+          },
+          optimizer: {
+            enabled: true,
+            runs: 99999,
+          },
+        },
       },
-    },
+    ],
   },
   typechain: {
     outDir: "typechain",
     target: "ethers-v5",
-    externalArtifacts: ["./node_modules/@uniswap/**/*.sol/*.json"],
   },
 };
 

@@ -15,6 +15,7 @@
     "contracts": "yarn workspace @reimbursement-token/contracts",
     "dev": "yarn contracts check-port > /dev/null && concurrently --success first --kill-others-on-fail --restart-tries 5 \"yarn contracts run node\" \"yarn contracts run deploy:dev && yarn app dev\"",
     "lint": "lerna run lint",
+    "postinstall": "patch-package",
     "prepare": "husky install && lerna run prepare",
     "prettier": "lerna run prettier",
     "test": "lerna run test"

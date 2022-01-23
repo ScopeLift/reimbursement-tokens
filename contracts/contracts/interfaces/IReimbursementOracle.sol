@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.7;
+pragma solidity >=0.5.0;
 
 /**
  * @notice Interface a Reimbursement Oracle must conform to. These Oracles are used to provide a
