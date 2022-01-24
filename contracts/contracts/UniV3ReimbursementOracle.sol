@@ -1,4 +1,5 @@
-pragma solidity >=0.5.0 <0.8.0;
+// SPDX-License-Identifier: MIT
+pragma solidity =0.7.6;
 import "./interfaces/IReimbursementOracle.sol";
 import "./lib/OracleLibrary.sol";
 import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
