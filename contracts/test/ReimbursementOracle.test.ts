@@ -4,15 +4,14 @@ import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 
 // Internal imports
-import { MockToken } from "../typechain/";
 import { deployReimbursementOracle, fastForward, getNow, isApproximate, toWad } from "./utils";
 import { deployTokens, UniV3 } from "./setup";
-import { IUniswapV3Pool } from "../typechain";
+import { IUniswapV3Pool, MockToken } from "../typechain";
 
 // Conevenience variables
 const { loadFixture } = waffle;
 
-describe.only("ReimbursementOracle", () => {
+describe("ReimbursementOracle", () => {
   let deployer: SignerWithAddress; // contract deployer & default account
   let treasuryToken: MockToken;
   let collateralToken: MockToken;
