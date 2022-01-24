@@ -5,7 +5,7 @@ import { expect } from "chai";
 
 // Internal imports
 import { ReimbursementToken, MockToken, ReimbursementPool, MockOracle } from "../typechain/";
-import { deployMockToken, deployRiToken, toWad, wmul, wdiv } from "./utils";
+import { deployMockToken, deployRiToken, fastForward, toWad, wmul, wdiv } from "./utils";
 import { BigNumberish } from "ethers";
 
 // Conevenience variables
@@ -51,11 +51,6 @@ const deployMockRiToken = async (deployer: SignerWithAddress, maturity: BigNumbe
 const deployMockOracle = async (deployer: SignerWithAddress, quote: BigNumberish) => {
   const artifact = artifacts.readArtifactSync("MockOracle");
   return deployContract(deployer, artifact, [quote]) as Promise<MockOracle>;
-};
-
-const fastForward = async (seconds: number): Promise<void> => {
-  await ethers.provider.send("evm_increaseTime", [seconds]);
-  await ethers.provider.send("evm_mine", []);
 };
 
 describe("ReimbursementPool", () => {

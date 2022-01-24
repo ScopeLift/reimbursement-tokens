@@ -19,7 +19,7 @@ import {
   IUniswapV3Factory,
   ERC20__factory,
   MockToken__factory,
-  // IUniswapV3Pool,
+  IUniswapV3Pool,
 } from "../typechain";
 
 export const deployTokens = async (deployer: SignerWithAddress) => {
@@ -82,37 +82,39 @@ export class UniV3 {
 
   async deployAll() {
     const factory = await this.deployUniswapV3Factory();
-    console.log(`UniswapV3Factory: ${factory.address}`);
-
     const swapRouter = await this.deploySwapRouter();
-    console.log(`SwapRouter: ${swapRouter.address}`);
-
     const nonfungiblePositionManager = await this.deployNonfungiblePositionManager();
-    console.log(`NonfungiblePositionManager: ${nonfungiblePositionManager.address}`);
-
     return { factory, swapRouter, nonfungiblePositionManager };
   }
 
   async createPool({
+    token0Address,
+    token1Address,
     fee,
     amount0,
     amount1,
-    token0Address,
-    token1Address,
   }: {
+    token0Address: string;
+    token1Address: string;
     fee: FeeAmount;
     amount0: string | number;
     amount1: string | number;
-    token0Address: string;
-    token1Address: string;
   }) {
-    const ratio = encodeSqrtRatioX96(amount1, amount0);
-    const token0 = await ERC20__factory.connect(token0Address, this.deployer);
-    const token1 = await ERC20__factory.connect(token1Address, this.deployer);
-    const symbol0 = await token0.symbol();
-    const symbol1 = await token1.symbol();
-    console.log(`Create pool ${symbol0}/${symbol1}`);
-    console.log(ratio.toString());
+    const isToken0Token0 = token0Address < token1Address;
+    const [amt0, amt1, token0, token1] = isToken0Token0
+      ? [
+          amount0,
+          amount1,
+          await ERC20__factory.connect(token0Address, this.deployer),
+          await ERC20__factory.connect(token1Address, this.deployer),
+        ]
+      : [
+          amount1,
+          amount0,
+          await ERC20__factory.connect(token1Address, this.deployer),
+          await ERC20__factory.connect(token0Address, this.deployer),
+        ];
+    const ratio = encodeSqrtRatioX96(amt1, amt0);
     await this.nonfungiblePositionManager.createAndInitializePoolIfNecessary(
       token0.address,
       token1.address,
@@ -120,7 +122,7 @@ export class UniV3 {
       ratio.toString(),
     );
     const poolAddress = await this.uniswapV3Factory.getPool(token0.address, token1.address, fee);
-    const pool = await ethers.getContractAt(POOL_ABI, poolAddress);
+    const pool = <IUniswapV3Pool>await ethers.getContractAt(POOL_ABI, poolAddress);
     return pool;
   }
 
@@ -137,19 +139,28 @@ export class UniV3 {
     amount0: string | number;
     amount1: string | number;
   }) {
-    const ratio = encodeSqrtRatioX96(amount1, amount0);
+    const isToken0Token0 = token0Address < token1Address;
+    const [amt0, amt1, token0, token1] = isToken0Token0
+      ? [
+          amount0,
+          amount1,
+          await MockToken__factory.connect(token0Address, this.deployer),
+          await MockToken__factory.connect(token1Address, this.deployer),
+        ]
+      : [
+          amount1,
+          amount0,
+          await MockToken__factory.connect(token1Address, this.deployer),
+          await MockToken__factory.connect(token0Address, this.deployer),
+        ];
+    const ratio = encodeSqrtRatioX96(amt1, amt0);
     const tick = TickMath.getTickAtSqrtRatio(ratio);
     const tickSpacing = TICK_SPACINGS[fee];
-    const deadline = Math.ceil(Date.now() / 1000) + 60;
-    console.log(`uniswap:add-liquidity > nfpManager: ${this.nonfungiblePositionManager.address}`);
-    const token0 = await MockToken__factory.connect(token0Address, this.deployer);
-    const token1 = await MockToken__factory.connect(token1Address, this.deployer);
+    await token0.approve(this.nonfungiblePositionManager.address, amt0);
+    await token1.approve(this.nonfungiblePositionManager.address, amt1);
 
-    await token0.approve(this.nonfungiblePositionManager.address, amount0);
-    await token1.approve(this.nonfungiblePositionManager.address, amount1);
-
-    if ((await token0.balanceOf(this.deployer.address)).lt(amount0)) await token0.mint(this.deployer.address, amount0);
-    if ((await token1.balanceOf(this.deployer.address)).lt(amount1)) await token1.mint(this.deployer.address, amount1);
+    if ((await token0.balanceOf(this.deployer.address)).lt(amt0)) await token0.mint(this.deployer.address, amt0);
+    if ((await token1.balanceOf(this.deployer.address)).lt(amt1)) await token1.mint(this.deployer.address, amt1);
 
     return this.nonfungiblePositionManager.mint({
       token0: token0.address,
@@ -157,12 +168,12 @@ export class UniV3 {
       fee,
       tickLower: nearestUsableTick(tick, tickSpacing) - tickSpacing,
       tickUpper: nearestUsableTick(tick, tickSpacing) + tickSpacing,
-      amount0Desired: amount0,
-      amount1Desired: amount1,
+      amount0Desired: amt0,
+      amount1Desired: amt1,
       amount0Min: 0,
       amount1Min: 0,
       recipient: this.deployer.address,
-      deadline,
+      deadline: Math.ceil(Date.now() / 1000) + 60,
     });
   }
 }

@@ -4,18 +4,20 @@ import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 
 // Internal imports
-import { UniV3ReimbursementOracle, MockToken } from "../typechain/";
-import { deployReimbursementOracle, getNow, toWad } from "./utils";
+import { MockToken } from "../typechain/";
+import { deployReimbursementOracle, fastForward, getNow, isApproximate, toWad } from "./utils";
 import { deployTokens, UniV3 } from "./setup";
+import { IUniswapV3Pool } from "../typechain";
 
 // Conevenience variables
 const { loadFixture } = waffle;
 
 describe.only("ReimbursementOracle", () => {
   let deployer: SignerWithAddress; // contract deployer & default account
-  let oracle: UniV3ReimbursementOracle;
   let treasuryToken: MockToken;
   let collateralToken: MockToken;
+  let pool: IUniswapV3Pool;
+  let tokenUnit: Record<string, any>;
 
   before(async () => {
     [deployer] = await ethers.getSigners();
@@ -29,30 +31,59 @@ describe.only("ReimbursementOracle", () => {
       fee: 3000,
       token0Address: treasuryToken.address,
       token1Address: collateralToken.address,
-      amount0: tokenUnit.treasury(3),
+      amount0: tokenUnit.treasury(1),
       amount1: tokenUnit.collateral(4),
     });
     await uni.addLiquidity({
       fee: 3000,
       token0Address: treasuryToken.address,
       token1Address: collateralToken.address,
-      amount0: tokenUnit.treasury(3e7),
+      amount0: tokenUnit.treasury(1e7),
       amount1: tokenUnit.collateral(4e7),
     });
-    const oracle = await deployReimbursementOracle(deployer, [pool.address, 1, tokenUnit.treasury(1)]);
-    const now = await getNow(ethers.provider);
-    await ethers.provider.send("evm_setNextBlockTimestamp", [now + 4000]);
-    return { pool, oracle, treasuryToken, collateralToken };
+    const now = await getNow();
+    await ethers.provider.send("evm_setNextBlockTimestamp", [now + 300]);
+    return { pool, treasuryToken, collateralToken, tokenUnit };
   }
 
   beforeEach(async () => {
-    ({ oracle, treasuryToken, collateralToken } = await loadFixture(setup));
+    ({ treasuryToken, collateralToken, pool, tokenUnit } = await loadFixture(setup));
   });
 
-  describe("deployment and setup", () => {
-    it("should be an oracle", async () => {
+  describe("Uniswap v3 oracle implementation", () => {
+    it("gets exchange rate", async () => {
+      const oracle = await deployReimbursementOracle(deployer, [
+        pool.address,
+        10, // 10 seconds ago
+        tokenUnit.collateral(1),
+      ]);
+      // "give me 1 collateral token expressed as a treasury token"
       const quote = await oracle.getOracleQuote(collateralToken.address, treasuryToken.address);
-      expect(quote).to.eq(toWad("75", 4));
+      // The amount of treasuryToken received for 1 collateralToken, expressed as a WAD
+      expect(isApproximate(quote, toWad(tokenUnit.treasury(".25"), await treasuryToken.decimals()))).to.be.true; // aka "price of 1 collateralToken is .25 treasuryToken"
+    });
+
+    it("reverts if price not old enough", async () => {
+      const oracle = await deployReimbursementOracle(deployer, [
+        pool.address,
+        600, // 10 minutes
+        tokenUnit.collateral(1),
+      ]);
+      await expect(oracle.getOracleQuote(collateralToken.address, treasuryToken.address)).to.be.revertedWith("OLD");
+      // then succeeds...
+      await fastForward(600);
+      const quote = await oracle.getOracleQuote(collateralToken.address, treasuryToken.address);
+      expect(isApproximate(quote, toWad(tokenUnit.treasury(".25"), await treasuryToken.decimals()))).to.be.true;
+    });
+
+    it("gives reciprocal when token0 and token1 are switched", async () => {
+      const oracle = await deployReimbursementOracle(deployer, [
+        pool.address,
+        10, // 10 seconds ago
+        tokenUnit.treasury(1), //
+      ]);
+      const quote = await oracle.getOracleQuote(treasuryToken.address, collateralToken.address);
+      expect(isApproximate(quote, toWad(tokenUnit.collateral("4"), await collateralToken.decimals()))).to.be.true;
     });
   });
 });

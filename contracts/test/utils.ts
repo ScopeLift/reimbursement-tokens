@@ -1,11 +1,15 @@
-import { artifacts, waffle } from "hardhat";
+import { artifacts, waffle, ethers } from "hardhat";
 import { Signer, BigNumberish, BigNumber } from "ethers";
 import { ReimbursementToken, MockToken, UniV3ReimbursementOracle } from "../typechain/";
 import { parseUnits } from "@ethersproject/units";
-import { Provider } from "@ethersproject/providers";
 const { deployContract } = waffle;
 
-export const getNow = async (provider: Provider) => (await provider.getBlock("latest")).timestamp;
+export const getNow = async () => (await ethers.provider.getBlock("latest")).timestamp;
+
+export const fastForward = async (seconds: number): Promise<void> => {
+  await ethers.provider.send("evm_increaseTime", [seconds]);
+  await ethers.provider.send("evm_mine", []);
+};
 
 export const deployRiToken = (deployer: Signer, params: Array<any>): Promise<ReimbursementToken> => {
   const artifact = artifacts.readArtifactSync("ReimbursementToken");
@@ -25,6 +29,12 @@ export const deployMockToken = (
 ): Promise<MockToken> => {
   const artifact = artifacts.readArtifactSync("MockToken");
   return deployContract(deployer, artifact, [name, symbol, decimals]) as Promise<MockToken>;
+};
+
+export const isApproximate = (number1: BigNumber, number2: BigNumber, precision: number = 4) => {
+  if (number1.eq(number2)) return true;
+  const margin = 1 / 10 ** precision;
+  return Math.abs(+number1 / +number2 - 1) < margin;
 };
 
 /**

@@ -5,21 +5,18 @@ import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract UniV3ReimbursementOracle is IReimbursementOracle {
-  IUniswapV3Pool public pool;
-  uint32 public period;
-  uint128 public quoteAmount;
+  IUniswapV3Pool public immutable pool;
+  uint32 public immutable period;
+  uint128 public immutable baseAmount;
 
-  /*
-    - Ask for in constructor: base token, quote token, period, amountIn/quote amount
-*/
   constructor(
     IUniswapV3Pool _pool,
     uint32 _period,
-    uint128 _quoteAmount
+    uint128 _baseAmount
   ) {
     pool = _pool;
     period = _period;
-    quoteAmount = _quoteAmount;
+    baseAmount = _baseAmount;
   }
 
   /**
@@ -30,11 +27,16 @@ contract UniV3ReimbursementOracle is IReimbursementOracle {
     return amount * 10**(18 - decimals);
   }
 
+  /**
+   * @param _baseToken The token for which a quote is being requested
+   * @param _quoteToken The token in which the "price" is quoted
+   * @return The amount of _quoteToken received for 1 _baseToken, expressed as a WAD
+   */
   function getOracleQuote(address _baseToken, address _quoteToken) external view override returns (uint256) {
     int24 timeWeightedAverageTick = OracleLibrary.consult(address(pool), period);
     return
       toWad(
-        OracleLibrary.getQuoteAtTick(timeWeightedAverageTick, quoteAmount, _baseToken, _quoteToken),
+        OracleLibrary.getQuoteAtTick(timeWeightedAverageTick, baseAmount, _baseToken, _quoteToken),
         ERC20(_quoteToken).decimals()
       );
   }
