@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.7.6;
 import "./interfaces/IReimbursementOracle.sol";
-import "./lib/OracleLibrary.sol";
+import "@uniswap/v3-periphery/contracts/libraries/OracleLibrary.sol";
 import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -37,7 +37,7 @@ contract UniV3ReimbursementOracle is IReimbursementOracle {
    * @return The amount of _quoteToken received for 1 _baseToken, expressed as a WAD
    */
   function getOracleQuote(address _baseToken, address _quoteToken) external view override returns (uint256) {
-    int24 timeWeightedAverageTick = OracleLibrary.consult(address(pool), period);
+    (int24 timeWeightedAverageTick, ) = OracleLibrary.consult(address(pool), period);
     return
       toWad(
         OracleLibrary.getQuoteAtTick(timeWeightedAverageTick, baseAmount, _baseToken, _quoteToken),
