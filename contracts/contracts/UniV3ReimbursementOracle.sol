@@ -15,6 +15,9 @@ contract UniV3ReimbursementOracle is IReimbursementOracle {
     uint32 _period,
     uint128 _baseAmount
   ) {
+    require(_baseAmount != 0, "baseAmount");
+    require(_period != 0, "period");
+    require(address(_pool) != address(0), "pool");
     pool = _pool;
     period = _period;
     baseAmount = _baseAmount;

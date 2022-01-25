@@ -88,6 +88,15 @@ const config: HardhatUserConfig = {
     compilers: [
       {
         version: "0.7.6",
+        settings: {
+          metadata: {
+            bytecodeHash: "none",
+          },
+          optimizer: {
+            enabled: true,
+            runs: 99999,
+          },
+        },
       },
       {
         version: "0.8.7",
