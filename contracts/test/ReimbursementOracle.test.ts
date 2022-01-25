@@ -10,6 +10,7 @@ import { IUniswapV3Pool, MockToken } from "../typechain";
 
 // Conevenience variables
 const { loadFixture } = waffle;
+const { AddressZero } = ethers.constants;
 
 describe("ReimbursementOracle", () => {
   let deployer: SignerWithAddress; // contract deployer & default account
@@ -73,6 +74,32 @@ describe("ReimbursementOracle", () => {
       await fastForward(600);
       const quote = await oracle.getOracleQuote(collateralToken.address, treasuryToken.address);
       expect(isApproximate(quote, toWad(tokenUnit.treasury(".25"), await treasuryToken.decimals()))).to.be.true;
+    });
+
+    it("reverts if no baseAmount supplied", async () => {
+      await expect(
+        deployReimbursementOracle(deployer, [
+          pool.address,
+          600, // 10 minutes
+          tokenUnit.collateral(0),
+        ]),
+      ).to.be.revertedWith("baseAmount");
+    });
+
+    it("reverts if no pool address supplied", async () => {
+      await expect(
+        deployReimbursementOracle(deployer, [
+          AddressZero,
+          600, // 10 minutes
+          tokenUnit.collateral(1),
+        ]),
+      ).to.be.revertedWith("pool");
+    });
+
+    it("reverts if no period is supplied", async () => {
+      await expect(deployReimbursementOracle(deployer, [pool.address, 0, tokenUnit.collateral(1)])).to.be.revertedWith(
+        "period",
+      );
     });
 
     it("gives reciprocal when token0 and token1 are switched", async () => {
