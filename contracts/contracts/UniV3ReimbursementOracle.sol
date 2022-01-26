@@ -6,8 +6,13 @@ import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract UniV3ReimbursementOracle is IReimbursementOracle {
+  /// @notice The pool from which to calculate exchange rate
   IUniswapV3Pool public immutable pool;
+
+  /// @notice The period (in seconds) over which to calculate a mean exchange rate
   uint32 public immutable period;
+
+  /// @notice 1 collateralToken represented in raw decimal value (aka 6 decimal token = 1000000)
   uint128 public immutable baseAmount;
 
   constructor(
@@ -32,9 +37,14 @@ contract UniV3ReimbursementOracle is IReimbursementOracle {
   }
 
   /**
-   * @param _baseToken The token for which a quote is being requested
-   * @param _quoteToken The token in which the "price" is quoted
-   * @return The amount of _quoteToken received for 1 _baseToken, expressed as a WAD
+   * @notice We use this function to get the value of 1 collateralToken in treasuryToken.
+   * We first query the pool and calculate the arithmetic mean over the period `period`. Then we
+   * convert the tick price to an exchange rate and return it as a WAD.
+   * Example: collateralToken is ETH and treasuryToken is USDC. Let's say 1 ETH = 5000 USDC.
+   * Then this function will return WAD(5000) or 5000 * 10^18
+   * @param _baseToken The collateral token address
+   * @param _quoteToken The treasury token address
+   * @return The amount of treasuryToken received for 1 collateralToken, expressed as a WAD
    */
   function getOracleQuote(address _baseToken, address _quoteToken) external view override returns (uint256) {
     (int24 timeWeightedAverageTick, ) = OracleLibrary.consult(address(pool), period);
