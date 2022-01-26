@@ -33,8 +33,12 @@ export const deployMockToken = (
 
 export const isApproximate = (number1: BigNumber, number2: BigNumber, precision: number = 4) => {
   if (number1.eq(number2)) return true;
-  const margin = 1 / 10 ** precision;
-  return Math.abs(+number1 / +number2 - 1) < margin;
+  const relativeTolerance = number1
+    .sub(number2)
+    .abs()
+    .mul(10 ** precision)
+    .div(number1.lt(number2) ? number1.abs() : number2.abs());
+  return relativeTolerance.eq(0);
 };
 
 /**
