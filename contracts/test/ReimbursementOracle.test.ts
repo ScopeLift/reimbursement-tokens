@@ -55,7 +55,6 @@ describe("ReimbursementOracle", () => {
       const oracle = await deployReimbursementOracle(deployer, [
         pool.address,
         10, // 10 seconds ago
-        tokenUnit.collateral(1),
       ]);
       // "give me 1 collateral token expressed as a treasury token"
       const quote = await oracle.getOracleQuote(collateralToken.address, treasuryToken.address);
@@ -67,7 +66,6 @@ describe("ReimbursementOracle", () => {
       const oracle = await deployReimbursementOracle(deployer, [
         pool.address,
         600, // 10 minutes
-        tokenUnit.collateral(1),
       ]);
       await expect(oracle.getOracleQuote(collateralToken.address, treasuryToken.address)).to.be.revertedWith("OLD");
       // then succeeds...
@@ -76,37 +74,23 @@ describe("ReimbursementOracle", () => {
       expect(isApproximate(quote, toWad(tokenUnit.treasury(".25"), await treasuryToken.decimals()))).to.be.true;
     });
 
-    it("reverts if no baseAmount supplied", async () => {
-      await expect(
-        deployReimbursementOracle(deployer, [
-          pool.address,
-          600, // 10 minutes
-          tokenUnit.collateral(0),
-        ]),
-      ).to.be.revertedWith("baseAmount");
-    });
-
     it("reverts if no pool address supplied", async () => {
       await expect(
         deployReimbursementOracle(deployer, [
           AddressZero,
           600, // 10 minutes
-          tokenUnit.collateral(1),
         ]),
       ).to.be.revertedWith("pool");
     });
 
     it("reverts if no period is supplied", async () => {
-      await expect(deployReimbursementOracle(deployer, [pool.address, 0, tokenUnit.collateral(1)])).to.be.revertedWith(
-        "period",
-      );
+      await expect(deployReimbursementOracle(deployer, [pool.address, 0])).to.be.revertedWith("period");
     });
 
     it("gives reciprocal when token0 and token1 are switched", async () => {
       const oracle = await deployReimbursementOracle(deployer, [
         pool.address,
         10, // 10 seconds ago
-        tokenUnit.treasury(1), //
       ]);
       const quote = await oracle.getOracleQuote(treasuryToken.address, collateralToken.address);
       expect(isApproximate(quote, toWad(tokenUnit.collateral("4"), await collateralToken.decimals()))).to.be.true;
