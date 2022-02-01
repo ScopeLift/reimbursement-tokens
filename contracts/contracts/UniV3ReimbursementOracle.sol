@@ -12,20 +12,11 @@ contract UniV3ReimbursementOracle is IReimbursementOracle {
   /// @notice The period (in seconds) over which to calculate a mean exchange rate
   uint32 public immutable period;
 
-  /// @notice 1 collateralToken represented in raw decimal value (aka 6 decimal token = 1000000)
-  uint128 public immutable baseAmount;
-
-  constructor(
-    IUniswapV3Pool _pool,
-    uint32 _period,
-    uint128 _baseAmount
-  ) {
-    require(_baseAmount != 0, "baseAmount");
+  constructor(IUniswapV3Pool _pool, uint32 _period) {
     require(_period != 0, "period");
     require(address(_pool) != address(0), "pool");
     pool = _pool;
     period = _period;
-    baseAmount = _baseAmount;
   }
 
   /**
@@ -47,10 +38,17 @@ contract UniV3ReimbursementOracle is IReimbursementOracle {
    * @return The amount of treasuryToken received for 1 collateralToken, expressed as a WAD
    */
   function getOracleQuote(address _baseToken, address _quoteToken) external view override returns (uint256) {
+    // require(pool.token0() == _baseToken || pool.token0() == _quoteToken, "token0");
+    // require(pool.token1() == _baseToken || pool.token1() == _quoteToken, "token1");
     (int24 timeWeightedAverageTick, ) = OracleLibrary.consult(address(pool), period);
     return
       toWad(
-        OracleLibrary.getQuoteAtTick(timeWeightedAverageTick, baseAmount, _baseToken, _quoteToken),
+        OracleLibrary.getQuoteAtTick(
+          timeWeightedAverageTick,
+          uint128(10**ERC20(_baseToken).decimals()),
+          _baseToken,
+          _quoteToken
+        ),
         ERC20(_quoteToken).decimals()
       );
   }
