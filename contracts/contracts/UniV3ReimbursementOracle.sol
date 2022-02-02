@@ -33,23 +33,21 @@ contract UniV3ReimbursementOracle is IReimbursementOracle {
    * convert the tick price to an exchange rate and return it as a WAD.
    * Example: collateralToken is ETH and treasuryToken is USDC. Let's say 1 ETH = 5000 USDC.
    * Then this function will return WAD(5000) or 5000 * 10^18
-   * @param _baseToken The collateral token address
-   * @param _quoteToken The treasury token address
+   * @param _collateralToken The collateral token address
+   * @param _treasuryToken The treasury token address
    * @return The amount of treasuryToken received for 1 collateralToken, expressed as a WAD
    */
-  function getOracleQuote(address _baseToken, address _quoteToken) external view override returns (uint256) {
-    // require(pool.token0() == _baseToken || pool.token0() == _quoteToken, "token0");
-    // require(pool.token1() == _baseToken || pool.token1() == _quoteToken, "token1");
+  function getOracleQuote(address _collateralToken, address _treasuryToken) external view override returns (uint256) {
     (int24 timeWeightedAverageTick, ) = OracleLibrary.consult(address(pool), period);
     return
       toWad(
         OracleLibrary.getQuoteAtTick(
           timeWeightedAverageTick,
-          uint128(10**ERC20(_baseToken).decimals()),
-          _baseToken,
-          _quoteToken
+          uint128(10**ERC20(_collateralToken).decimals()),
+          _collateralToken,
+          _treasuryToken
         ),
-        ERC20(_quoteToken).decimals()
+        ERC20(_treasuryToken).decimals()
       );
   }
 }
