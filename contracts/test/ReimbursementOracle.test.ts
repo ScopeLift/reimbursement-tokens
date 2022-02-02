@@ -87,6 +87,20 @@ describe("ReimbursementOracle", () => {
       await expect(deployReimbursementOracle(deployer, [pool.address, 0])).to.be.revertedWith("period");
     });
 
+    it("reverts on quotes for wrong token addresses", async () => {
+      const oracle = await deployReimbursementOracle(deployer, [
+        pool.address,
+        10, // 10 seconds ago
+      ]);
+      const problemToken = ethers.Wallet.createRandom();
+      await expect(oracle.getOracleQuote(problemToken.address, treasuryToken.address)).to.be.revertedWith(
+        "oracle token",
+      );
+      await expect(oracle.getOracleQuote(collateralToken.address, problemToken.address)).to.be.revertedWith(
+        "oracle token",
+      );
+    });
+
     it("gives reciprocal when token0 and token1 are switched", async () => {
       const oracle = await deployReimbursementOracle(deployer, [
         pool.address,
