@@ -38,6 +38,8 @@ contract UniV3ReimbursementOracle is IReimbursementOracle {
    * @return The amount of treasuryToken received for 1 collateralToken, expressed as a WAD
    */
   function getOracleQuote(address _collateralToken, address _treasuryToken) external view override returns (uint256) {
+    require(pool.token0() == _collateralToken || pool.token0() == _treasuryToken, "oracle token");
+    require(pool.token1() == _collateralToken || pool.token1() == _treasuryToken, "oracle token");
     (int24 timeWeightedAverageTick, ) = OracleLibrary.consult(address(pool), period);
     return
       toWad(
