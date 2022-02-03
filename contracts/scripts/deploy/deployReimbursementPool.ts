@@ -9,6 +9,7 @@ export const deployReimbursementPool = async (
 ) => {
   const poolFactory = <ReimbursementPool__factory>await ethers.getContractFactory("ReimbursementPool");
   const reimbursementPool = <ReimbursementPool>await poolFactory.deploy(...args);
+  console.log("ReimbursementPool deploying: ", reimbursementPool.deployTransaction.hash);
   await reimbursementPool.deployed();
   context.ReimbursementPool = {
     address: reimbursementPool.address,

@@ -21,7 +21,7 @@
     "check-port": "sh ./scripts/util/check-port.sh",
     "clean": "hardhat clean",
     "coverage": "cross-env CODE_COVERAGE=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
-    "deploy": "echo \"no deploy script yet\"",
+    "deploy": "hardhat run scripts/deployProd.ts",
     "deploy:dev": "hardhat run scripts/deployDevEnvironment.ts --network localhost",
     "postinstall": "cd .. && husky install",
     "lint": "yarn run lint:sol && yarn run lint:ts && yarn run prettier:check",
