@@ -9,6 +9,7 @@ export const deployReimbursementToken = async (
 ) => {
   const tokenFactory = <ReimbursementToken__factory>await ethers.getContractFactory("ReimbursementToken");
   const reimbursementToken = <ReimbursementToken>await tokenFactory.deploy(...args);
+  console.log("ReimbursementToken deploying: ", reimbursementToken.deployTransaction.hash);
   await reimbursementToken.deployed();
   context.ReimbursementToken = {
     address: reimbursementToken.address,

@@ -12,6 +12,7 @@ export const deployUniV3ReimbursementOracle = async (
   const contract = await ethers
     .getContractFactory("UniV3ReimbursementOracle")
     .then((factory: UniV3ReimbursementOracle__factory) => factory.deploy(...args));
+  console.log("UniV3ReimbursementOracle deploying: ", contract.deployTransaction.hash);
   await contract.deployed();
   context.UniV3ReimbursementOracle = {
     address: contract.address,

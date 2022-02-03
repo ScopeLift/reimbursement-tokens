@@ -11,3 +11,10 @@ export const record = async (deployment: Record<string, DeployRecord>): Promise<
   await writeFile(`./deploys/${network.name}.json`, JSON.stringify(deployment, null, 2));
   console.log(`Deployment record saved!`);
 };
+
+export const isValidNetwork = (
+  config: Record<string, any>,
+  networkName: string,
+): networkName is keyof typeof config => {
+  return Object.keys(config).includes(networkName);
+};
