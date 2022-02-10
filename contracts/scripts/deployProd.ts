@@ -6,6 +6,12 @@ import { deployUniV3ReimbursementOracle } from "./deploy/deployUniV3Reimbursemen
 import { record, DeployDetail, isValidNetwork } from "./deploy/helpers";
 import { config as chainConfig } from "./deployConfig";
 
+const log = console.log;
+
+console.log = function (...args) {
+  log.apply(console, [new Date(), "|"].concat(args));
+};
+
 async function main() {
   if (!isValidNetwork(chainConfig, network.name)) throw new Error(`No network config for network ${network.name}`);
   const config = chainConfig[network.name];
