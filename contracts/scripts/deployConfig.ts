@@ -36,6 +36,20 @@ export const config: Record<string, deployConfig> = {
       twapPeriod: 600,
     },
   },
+  // Rinkeby: config example with no collateral token / oracle
+  rinkeby: {
+    riToken: {
+      name: "Test Reimbursement Token",
+      symbol: "TRT",
+      supply: units.wad(1000000),
+      treasuryToken: "0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735", // DAI
+      maturity: Math.floor(Date.now() / 1000) + 60 * 60, // 1 hour in the future
+    },
+    merkleRoot: "0x0000000000000000000000000000000000000000000000000000000000000000",
+    riPool: {
+      targetExchangeRate: units.wad(3),
+    },
+  },
 };
 
 export type deployConfig = {
@@ -46,7 +60,7 @@ export type deployConfig = {
     treasuryToken: string;
     maturity: number;
   };
-  merkleRoot?: string;
+  merkleRoot: string;
   oracle?: {
     uniV3Pool: string;
     twapPeriod: number;

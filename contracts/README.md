@@ -82,10 +82,18 @@ $ yarn clean
 ### Production Deploy
 
 Ensure that `MNEMONIC` and `INFURA_API_KEY` are set in [.env](/contracts/.env).
-Ensure a [deployConfig](/contracts/scripts/deployConfig.ts) entry exists for your network of choice. Change the configuration values to your liking. Config is keyed on network.
+Ensure a [deployConfig](/contracts/scripts/deployConfig.ts) entry exists for your network of choice. Change the configuration values to your liking.
 
 ```sh
 $ yarn deploy --network rospten
+```
+
+### Single Contract Deploy
+
+Use if you want to deploy a small part of the system
+
+```sh
+$ yarn deploy:single --network ropsten --name MockOracle 100000
 ```
 
 ## Syntax Highlighting

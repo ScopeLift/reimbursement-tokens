@@ -21,14 +21,11 @@ async function main() {
       config.riToken.supply,
       signers[0].address,
     );
-    if (config.merkleRoot) {
-      const distributor = await deployMerkleDistributor(deployContext, riToken.address, config.merkleRoot);
-      const transfer = await riToken.transfer(distributor.address, config.riToken.supply);
-      console.log(`Transferring riToken supply to merkle distributor:\t${transfer.hash}`);
-      await transfer.wait();
-      console.log(`Transfer completed.`);
-    }
-
+    const distributor = await deployMerkleDistributor(deployContext, riToken.address, config.merkleRoot);
+    const transfer = await riToken.transfer(distributor.address, config.riToken.supply);
+    console.log(`Transferring riToken supply to merkle distributor:  ${transfer.hash}`);
+    await transfer.wait();
+    console.log(`Transfer completed.`);
     const oracle = config.oracle
       ? await deployUniV3ReimbursementOracle(deployContext, config.oracle.uniV3Pool, config.oracle.twapPeriod)
       : undefined;
