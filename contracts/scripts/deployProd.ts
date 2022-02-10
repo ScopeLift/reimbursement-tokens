@@ -28,16 +28,16 @@ async function main() {
       await transfer.wait();
       console.log(`Transfer completed.`);
     }
-    const oracle = await deployUniV3ReimbursementOracle(
-      deployContext,
-      config.oracle.uniV3Pool,
-      config.oracle.twapPeriod,
-    );
+
+    const oracle = config.oracle
+      ? await deployUniV3ReimbursementOracle(deployContext, config.oracle.uniV3Pool, config.oracle.twapPeriod)
+      : undefined;
+
     await deployReimbursementPool(
       deployContext,
       riToken.address,
-      config.riPool.collateralToken,
-      oracle.address,
+      config.riPool.collateralToken || ethers.constants.AddressZero,
+      oracle ? oracle.address : ethers.constants.AddressZero,
       config.riPool.targetExchangeRate,
       signers[0].address,
     );
