@@ -1,12 +1,9 @@
 import { ethers } from "hardhat";
 import { MockOracle__factory } from "../../typechain/factories/MockOracle__factory";
-type DeployRecord = {
-  address: string;
-  constructorArgs?: unknown[];
-};
+import { DeployDetail } from "./helpers";
 
 export const deployMockOracle = async (
-  context: Record<string, DeployRecord>,
+  context: Record<string, DeployDetail>,
   ...args: Parameters<MockOracle__factory["deploy"]>
 ) => {
   const contract = await ethers

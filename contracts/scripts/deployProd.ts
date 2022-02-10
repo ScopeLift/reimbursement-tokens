@@ -2,13 +2,13 @@ import { ethers, network } from "hardhat";
 import { deployReimbursementPool } from "./deploy/deployReimbursementPool";
 import { deployReimbursementToken } from "./deploy/deployReimbursementToken";
 import { deployUniV3ReimbursementOracle } from "./deploy/deployUniV3ReimbursementOracle";
-import { record, DeployRecord, isValidNetwork } from "./deploy/helpers";
+import { record, DeployDetail, isValidNetwork } from "./deploy/helpers";
 import { config as chainConfig } from "./deployConfig";
 
 async function main() {
   if (!isValidNetwork(chainConfig, network.name)) throw new Error(`No network config for network ${network.name}`);
   const config = chainConfig[network.name];
-  const deployContext: Record<string, DeployRecord> = {};
+  const deployContext: Record<string, DeployDetail> = {};
   try {
     const signers = await ethers.getSigners();
     const riToken = await deployReimbursementToken(

@@ -38,7 +38,7 @@ export const config: Record<string, deployConfig> = {
   },
 };
 
-type deployConfig = {
+export type deployConfig = {
   riToken: {
     name: string;
     symbol: string;

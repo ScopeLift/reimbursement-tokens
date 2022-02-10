@@ -1,12 +1,9 @@
 import { ethers } from "hardhat";
 import { UniV3ReimbursementOracle__factory } from "../../typechain/factories/UniV3ReimbursementOracle__factory";
-type DeployRecord = {
-  address: string;
-  constructorArgs?: unknown[];
-};
+import { DeployDetail } from "./helpers";
 
 export const deployUniV3ReimbursementOracle = async (
-  context: Record<string, DeployRecord>,
+  context: Record<string, DeployDetail>,
   ...args: Parameters<UniV3ReimbursementOracle__factory["deploy"]>
 ) => {
   const contract = await ethers
