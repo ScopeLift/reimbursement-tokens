@@ -1,5 +1,4 @@
 import { task } from "hardhat/config";
-// import { ethers, network } from "hardhat";
 
 task("deploy-single", "Deploy single part of system")
   .addParam("name", "The name of the artifact to deploy")

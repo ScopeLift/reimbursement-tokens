@@ -6,34 +6,30 @@ export const config: Record<string, deployConfig> = {
     riToken: {
       name: "Test Reimbursement Token",
       symbol: "TRT",
-      supply: units.wad(100000),
+      // riToken has 18 decimals, so we use wad to set total supply
+      // Here, supply is 1,000,000 riTokens
+      supply: units.wad(1000000),
+      // Token that underlies the reimbursement token
       treasuryToken: "0xaD6D458402F60fD3Bd25163575031ACDce07538D", // DAI
-      maturity: Math.floor(Date.now() / 1000) + 60 * 60, // 1 hour in the future
+      // How long to wait before maturation / reimbursement calc finalization
+      // Here, 1 hour in the future
+      maturity: Math.floor(Date.now() / 1000) + 60 * 60,
+    },
+    // Merkle root for distributor contract
+    merkleRoot: "0x0000000000000000000000000000000000000000000000000000000000000000",
+    riPool: {
+      // targeting 1 reimbursement token = 3 underlying treasury tokens
+      targetExchangeRate: units.wad(3),
+      // optional collateral token
+      collateralToken: "0xc778417E063141139Fce010982780140Aa0cD5Ab", // WETH
     },
     oracle: {
+      // DAI / WETH pool at fee 0.3%
+      // see getPool @ https://ropsten.etherscan.io/address/0x1F98431c8aD98523631AE4a59f267346ea31F984#readContract
       uniV3Pool: "0x40FDe2952a0674a3E77707Af270af09800657293",
-      twapPeriod: 600, // 600 seconds
-    },
-    riPool: {
-      targetExchangeRate: units.wad(3), // targeting 1 reimbursement token = 3 treasury tokens
-      collateralToken: "0xc778417E063141139Fce010982780140Aa0cD5Ab", // WETH
-    },
-  },
-  rinkeby: {
-    riToken: {
-      name: "Test Reimbursement Token",
-      symbol: "TRT",
-      supply: units.wad(100000),
-      treasuryToken: "0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735", // DAI
-      maturity: Math.floor(Date.now() / 1000) + 60 * 60, // 1 hour in the future
-    },
-    oracle: {
-      uniV3Pool: "0x0f04024bdA15F6e5D48Ed92938654a6449F483ed",
-      twapPeriod: 600, // 600 seconds
-    },
-    riPool: {
-      targetExchangeRate: 10000,
-      collateralToken: "0xc778417E063141139Fce010982780140Aa0cD5Ab", // WETH
+      // Specifies the interval in seconds that the oracle's TWAP should calculate the mean over
+      // here, 600 seconds or 10 min
+      twapPeriod: 600,
     },
   },
 };
@@ -46,12 +42,13 @@ export type deployConfig = {
     treasuryToken: string;
     maturity: number;
   };
+  merkleRoot?: string;
   oracle: {
     uniV3Pool: string;
     twapPeriod: number;
   };
   riPool: {
     targetExchangeRate: BigNumberish;
-    collateralToken: string;
+    collateralToken?: string;
   };
 };
