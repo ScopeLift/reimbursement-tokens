@@ -7,7 +7,7 @@ task("deploy-single", "Deploy single part of system")
     const { ethers, network } = hre;
     const contract = await ethers.getContractFactory(taskArgs.name);
     const tx = await contract.deploy(...taskArgs.args);
-    console.log(`${taskArgs.name} deploying on ${network.name} @ ${tx.deployTransaction.hash}...`);
+    console.log(`${taskArgs.name} deploying on ${network.name}:  ${tx.deployTransaction.hash}...`);
     await tx.deployed();
     console.log(`${taskArgs.name} deployed: ${tx.address}`);
   });
