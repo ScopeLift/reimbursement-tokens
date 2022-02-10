@@ -1,12 +1,9 @@
 import { ethers } from "hardhat";
 import { MockToken__factory } from "../../typechain/factories/MockToken__factory";
-type DeployRecord = {
-  address: string;
-  constructorArgs?: unknown[];
-};
+import { DeployDetail } from "./helpers";
 
 export const deployMockToken = async (
-  context: Record<string, DeployRecord>,
+  context: Record<string, DeployDetail>,
   ...args: Parameters<MockToken__factory["deploy"]>
 ) => {
   const contract = await ethers

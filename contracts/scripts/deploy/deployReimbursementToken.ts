@@ -1,10 +1,10 @@
 import { ethers } from "hardhat";
 import { ReimbursementToken } from "../../typechain";
 import { ReimbursementToken__factory } from "../../typechain/factories/ReimbursementToken__factory";
-import { DeployRecord } from "./helpers";
+import { DeployDetail } from "./helpers";
 
 export const deployReimbursementToken = async (
-  context: Record<string, DeployRecord>,
+  context: Record<string, DeployDetail>,
   ...args: Parameters<ReimbursementToken__factory["deploy"]>
 ) => {
   const tokenFactory = <ReimbursementToken__factory>await ethers.getContractFactory("ReimbursementToken");
