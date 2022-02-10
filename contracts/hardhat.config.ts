@@ -6,7 +6,7 @@ import "solidity-coverage";
 
 import "./tasks/accounts";
 import "./tasks/clean";
-import "./tasks/deploySingle";
+import "./tasks/deploy-single";
 
 import { resolve } from "path";
 

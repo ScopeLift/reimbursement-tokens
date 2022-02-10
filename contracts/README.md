@@ -79,12 +79,13 @@ Delete the smart contract artifacts, the coverage reports and the Hardhat cache:
 $ yarn clean
 ```
 
-### Deploy
+### Production Deploy
 
-Deploy the contracts to Hardhat Network:
+Ensure that `MNEMONIC` and `INFURA_API_KEY` are set in [.env](/contracts/.env).
+Ensure a [deployConfig](/contracts/scripts/deployConfig.ts) entry exists for your network of choice. Change the configuration values to your liking. Config is keyed on network.
 
 ```sh
-$ yarn deploy --greeting "Bonjour, le monde!"
+$ yarn deploy --network rospten
 ```
 
 ## Syntax Highlighting
