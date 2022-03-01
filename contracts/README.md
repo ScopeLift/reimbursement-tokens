@@ -101,6 +101,25 @@ Delete the smart contract artifacts, the coverage reports and the Hardhat cache:
 $ yarn clean
 ```
 
+### Dev Deploy
+
+Dev config is done in the deploy script itself: [deployDevEnvironment.ts](./scripts/deployDevEnvironment.ts). For a functioning merkle distributor, provide it with a proper merkle root.
+
+Run a local hardhat node:
+
+```sh
+yarn hardhat node
+```
+
+In another terminal, deploy:
+
+```sh
+# cwd is /contracts
+yarn deploy:dev
+```
+
+Alternatively, run `yarn dev` from the project root.
+
 ### Production Deploy
 
 Ensure that `MNEMONIC` and `INFURA_API_KEY` are set in [.env](/contracts/.env). Deploy configuration is done via the [deployConfig.ts](/contracts/scripts/deployConfig.ts) file. Ensure this file includes an entry for your network of choice, and be sure to adjust the configuration values according to your preferences.
