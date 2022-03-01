@@ -21,11 +21,13 @@ export const config: Record<string, deployConfig> = {
     riPool: {
       // targeting 1 reimbursement token = 3 underlying treasury tokens
       targetExchangeRate: units.wad(3),
-      // Optional collateral token to collect and, if shortfall on maturity, distribute
+      // Optional collateral token to collect and, if shortfall on maturity, distribute.
+      // Leave undefined if no collateral token is desired (see rinkeby config below for example)
       // Here, Ropsten WETH
       collateralToken: "0xc778417E063141139Fce010982780140Aa0cD5Ab", // WETH
     },
     // Oracle config: only necessary if collateralToken set in riPool
+    // Leave undefined if no collateral token is desired (see rinkeby config below for example)
     oracle: {
       // Ropsten DAI / WETH pool with fee 0.3%
       // see getPool @ https://ropsten.etherscan.io/address/0x1F98431c8aD98523631AE4a59f267346ea31F984#readContract
