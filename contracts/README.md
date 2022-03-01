@@ -1,7 +1,5 @@
 # Reimbursement Token Contracts
 
-Template forked from [Paul Berg's Solidity template](https://github.com/paulrberg/solidity-template)
-
 ## Contract Components
 
 ### [ReimbursementToken.sol](./contracts/ReimbursementToken.sol)
@@ -25,11 +23,7 @@ If a reimbursement pool specifies an optional collateral token, an oracle implem
 UniV3ReimbursementOracle is a simple implementation that will get the collateral token price in terms of the treasury token using the corresponding Uniswap v3 pool.
 
 When choosing a Uniswap v3 pool, there are a couple things related to pool liquidity that should be considered.
-Please choose the pool at the fee tier that has the most liquidity.
-This simple oracle implementation only looks at the ticks/prices of one pool.
-Furthermore, the purpose of a reimbursement pool's collateral token is to make up for a shortfall in the treasury token.
-This is only meaningful if users receiving this collateral token receive a value equivalent to their share of the shortfall.
-Token pairs with limited liquidity may be incongruent with the reimbursement pool design's spirit.
+Please choose a pool with sufficient liquidity to avoid price manipulation. For more information, see [Euler's Oracle Risk Grading System](https://blog.euler.finance/eulers-oracle-risk-grading-system-93f47d68205c).
 
 Another oracle implementation can be used instead of UniV3ReimbursementOracle.
 Simply create a contract that implements [IReimbursementOracle](./contracts/interfaces/IReimbursementOracle.sol), and revise [deployProd.ts](./scripts/deployProd.ts) to deploy your oracle implementation instead of what's provided.
@@ -164,3 +158,7 @@ The recommended approach to set the compiler version is to add the following fie
 ```
 
 Where of course `v0.8.4+commit.c7e474f2` can be replaced with any other version.
+
+---
+
+Template forked from [Paul Berg's Solidity template](https://github.com/paulrberg/solidity-template)
