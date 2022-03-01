@@ -3,10 +3,10 @@ import { deployMockToken } from "./deploy/deployMockToken";
 import { deployMockOracle } from "./deploy/deployMockOracle";
 import { deployReimbursementPool } from "./deploy/deployReimbursementPool";
 import { deployReimbursementToken } from "./deploy/deployReimbursementToken";
-import { record, DeployRecord } from "./deploy/helpers";
+import { record, DeployDetail } from "./deploy/helpers";
 
 async function main() {
-  const deployContext: Record<string, DeployRecord> = {};
+  const deployContext: Record<string, DeployDetail> = {};
   try {
     const signers = await ethers.getSigners();
     const usdc = await deployMockToken(deployContext, "USDC", "USDC", 6);
