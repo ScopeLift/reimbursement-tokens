@@ -8,7 +8,7 @@ export const config: Record<string, deployConfig> = {
       symbol: "TRT",
       // riToken has 18 decimals, so we use wad to set total supply
       // Here, supply is 1,000,000 riTokens
-      supply: units.wad(1000000),
+      supply: units.wad(1_000_000),
       // Token that underlies the reimbursement token
       // Here, Ropsten DAI
       treasuryToken: "0xaD6D458402F60fD3Bd25163575031ACDce07538D",
@@ -43,7 +43,7 @@ export const config: Record<string, deployConfig> = {
     riToken: {
       name: "Test Reimbursement Token",
       symbol: "TRT",
-      supply: units.wad(1000000),
+      supply: units.wad(1_000_000),
       treasuryToken: "0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735", // DAI
       maturity: Math.floor(Date.now() / 1000) + 60 * 60, // 1 hour in the future
     },
