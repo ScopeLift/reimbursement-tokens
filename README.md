@@ -3,11 +3,11 @@
 ### High level system overview
 
 A **Reimbursement Token** is an asset provided by protocols to users in response to a loss of funds.
-It represents a claim on collateral and treasury tokens that have or will be provided by a protocol.
-The reimbursement token may be exchanged for treasury and or collateral tokens on a specified maturity date.
+It represents a claim on treasury tokens, and optionally collateral tokens, that have or will be provided by a protocol.
+The reimbursement token may be exchanged for treasury and/or collateral tokens on a specified maturity date.
 Before the maturity date, the tokens may be bought and sold freely.
-The market price of a Reimbursement Token.
-It should logically reflect the market's confidence in a protocol's ability to provide the collateral and/or treasury tokens by the maturity date, along with some time preference discount.
+The market price of a Reimbursement Token should logically reflect the market's confidence in a protocol's ability
+to provide the collateral and/or treasury tokens by the maturity date, along with some time preference discount.
 
 Users with lost funds can claim their reimbursement tokens via a **Merkle Distributor** contract.
 
@@ -17,7 +17,8 @@ The bond issuer may also reclaim any _excess_ capital after maturity.
 
 A reimbursement token must denominate a treasury token for which it will be redeemed upon maturity.
 Additionally, the reimbursement pool can optionally specify a collateral token.
-If there is a shortfall of treasury token at maturity, the pool's collateral token balance will then be used to make up the shortfall.
+If there is a shortfall of treasury tokens at maturity, the pool's collateral token balance will then be used to make up the shortfall.
+
 An **oracle implementation** should be used to value the collateral token in terms of the treasury token.
 Any suitable oracle implementation that conforms to [IReimbursementOracle](/contracts/contracts/interfaces/IReimbursementOracle.sol) can be used; for convenience a [Uniswap v3 oracle implementation](/contracts/contracts/UniV3ReimbursementOracle.sol) is already provided.
 
