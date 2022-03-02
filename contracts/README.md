@@ -11,6 +11,7 @@ Key parameters like `maturity` and `underlying` must be passed to the constructo
 
 Contract that can be used to dispense reimbursement tokens to affected users.
 A merkle root representing the distribution amounts should be provided to [deployConfig.ts](./scripts/deployConfig.ts).
+See [Uniswap/merkle-distributor](https://github.com/Uniswap/merkle-distributor)'s `generate-merkle-root` script.
 
 ### [ReimbursementPool.sol](./contracts/ReimbursementPool.sol)
 
@@ -34,7 +35,6 @@ Simply create a contract that implements [IReimbursementOracle](./contracts/inte
 
 Before running any command, you need to create a `.env` file and set a BIP-39 compatible mnemonic as an environment variable.
 Follow the example in `.env.example`.
-If you don't already have a mnemonic, use this [website](https://iancoleman.io/bip39/) to generate one.
 
 Then, proceed with installing dependencies:
 
@@ -110,6 +110,8 @@ $ yarn clean
 
 Dev config is done in the deploy script itself: [deployDevEnvironment.ts](./scripts/deployDevEnvironment.ts).
 For a functioning merkle distributor, provide it with a proper merkle root.
+You can use [Uniswap/merkle-distributor](https://github.com/Uniswap/merkle-distributor),
+particularly their `generate-merkle-root` script.
 
 Run a local hardhat node:
 
